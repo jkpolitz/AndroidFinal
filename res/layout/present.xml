@@ -38,9 +38,14 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/next" />
-        
-        
     </LinearLayout>
+    <Button
+        android:id="@+id/endPres"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="End Presentation"
+        android:layout_below="@id/controls"
+        android:textSize="12dp" />
     
 
 </RelativeLayout>

@@ -48,6 +48,7 @@ public class Remote extends Activity {
 	public TextView slideInfo;
 	public ImageView slideImg;
 	public TextView presName;
+	public Button endPres;
 
 	private int presID;
 	private int numS = 5;
@@ -62,6 +63,7 @@ public class Remote extends Activity {
 	private String getSlides = "http://upresent.org/api/index.php/getSlides/";
 	private String getPresInfo = "http://upresent.org/api/index.php/getPresInfo/";
 	private String setSlide = "http://upresent.org/api/index.php/setCurrentSlide";
+	private String end = "http://upresent.org/api/index.php/finishPresentation";
 
 	// private String slideURLs = 0;
 
@@ -82,6 +84,7 @@ public class Remote extends Activity {
 		slideInfo = (TextView) findViewById(R.id.slideNumInfo);
 		slideImg = (ImageView) findViewById(R.id.currSlideImg);
 		presName = (TextView) findViewById(R.id.presName);
+		endPres = (Button) findViewById(R.id.endPres);
 
 		apiInfo = getSlides;
 		apiInfo += presID;
@@ -131,6 +134,15 @@ public class Remote extends Activity {
 				}
 			}
 		});
+		endPres.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getApplicationContext(),
+						"Ending Presentation.",
+						Toast.LENGTH_SHORT).show();
+				endPresentation();
+			}
+		});
 
 	}
 
@@ -164,46 +176,42 @@ public class Remote extends Activity {
 		slideInfo.setText(currSlide + "|" + numS);
 		slideImg.setImageBitmap(slideImgs[currSlide - 1]);
 		// post slide change to server
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.accumulate("presId", presID);
+			jsonObject.accumulate("currSlide", currSlide);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		postJSON(jsonObject, setSlide);
+
+	}
+	
+	private void endPresentation() {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.accumulate("presId", presID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		postJSON(jsonObject, end);
+		onBackPressed();
+	}
+	
+	private void postJSON(JSONObject json, String url) {
 		InputStream inputStream = null;
 		String result = "";
 		try {
-
-			// 1. create HttpClient
 			HttpClient httpclient = new DefaultHttpClient();
-
-			// 2. make POST request to the given URL
-			HttpPost httpPost = new HttpPost(setSlide);
-
-			String json = "";
-
-			// 3. build jsonObject
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.accumulate("presId", presID);
-			jsonObject.accumulate("currSlide", currSlide);
-
-			// 4. convert JSONObject to JSON to String
-			json = jsonObject.toString();
-			
-			Log.d("JKP_171", json);
-
-			// 5. set json to StringEntity
-			StringEntity se = new StringEntity(json);
-
-			// 6. set httpPost Entity
+			HttpPost httpPost = new HttpPost(url);
+			String jsonS = "";
+			jsonS = json.toString();
+			StringEntity se = new StringEntity(jsonS);
 			httpPost.setEntity(se);
-
-			// 7. Set some headers to inform server about the type of the
-			// content
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
-
-			// 8. Execute POST request to the given URL
 			HttpResponse httpResponse = httpclient.execute(httpPost);
-
-			// 9. receive response as inputStream
 			inputStream = httpResponse.getEntity().getContent();
-
-			// 10. convert inputstream to string
 			if (inputStream != null) {
 				result = convertInputStreamToString(inputStream);
 				Log.d("JKP_193", result);
@@ -214,7 +222,6 @@ public class Remote extends Activity {
 		} catch (Exception e) {
 			Log.d("InputStream", e.getLocalizedMessage());
 		}
-
 	}
 
 	private class GetSlides extends AsyncTask<String, Integer, JSONObject> {

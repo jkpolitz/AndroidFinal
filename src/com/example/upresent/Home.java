@@ -47,6 +47,7 @@ public class Home extends ListActivity {
 
 		new GetPresentations().execute(getPres);
 		Log.d("JKP", "pulled presentations");
+		launchRemote(18);
 
 	}
 
