@@ -27,7 +27,10 @@
             android:label="Remote" >
             
         </activity>
-        
+        <activity
+            android:name="com.example.upresent.MainActivity"
+            android:label="Login" >
+        </activity>
     </application>
 
 </manifest>

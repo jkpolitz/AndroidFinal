@@ -2,6 +2,7 @@ package com.example.upresent;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,30 +27,69 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Home extends ListActivity {
-	
-	/*PresentationAdapter adapter;
-	adapter = new PresentationAdapter(this, p);
-	setListAdapter(adapter);*/
+public class Home extends Activity {
+
+	public ListView tView;
+	public TextView txView;
 
 	private static final int PRES_REQUEST = 6349;
 
-	private Presentation[] p;
+	ArrayList<String> names = new ArrayList<String>();
+	ArrayList<Integer> ids = new ArrayList<Integer>();
 
-	private String getPres = "http://upresent.org/api/index.php/getPresentations/jackjp";
+	public String getPres = "http://upresent.org/api/index.php/getPresentations/jackjp";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.home);
 
-		new GetPresentations().execute(getPres);
+		tView = (ListView) findViewById(android.R.id.list);
+
+		String result = loadJsonFromNetwork(getPres);
+		JSONArray resultJSON = null;
+		try {
+			resultJSON = new JSONArray(result);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			JSONObject resultObj;
+			Log.d("JKP", "Testing");
+			for (int i = 0; i < resultJSON.length(); i++) {
+				resultObj = resultJSON.getJSONObject(i);
+				names.add(resultObj.getString("presName"));
+				ids.add(resultObj.getInt("presId"));
+				Toast.makeText(getApplicationContext(),
+						names.get(i).toString(), Toast.LENGTH_SHORT).show();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, android.R.id.text1, names) {
+
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View v = super.getView(position, convertView, parent);
+				((TextView) v).setText(names.get(position));
+
+				
+
+				return v;
+			}
+		};
+		tView.setAdapter(adapter);
+
 		Log.d("JKP", "pulled presentations");
-		launchRemote(18);
-
 	}
 
 	private void launchRemote(int presID) {
@@ -76,73 +117,6 @@ public class Home extends ListActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public class PresentationAdapter extends ArrayAdapter<Presentation> {
-		Presentation[] pres;
-
-		public PresentationAdapter(Context context, Presentation[] presT) {
-			super(context, R.layout.home, R.id.text, presT);
-			pres = presT;
-		}
-
-		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-			View v = super.getView(position, convertView, parent);
-			TextView textView = (TextView) v.findViewById(R.id.text);
-
-			return v;
-		}
-	}
-
-	public static class Presentation {
-		public String name;
-		public int presID;
-
-		public Presentation(String name, int presId) {
-			this.name = name;
-			this.presID = presId;
-		}
-
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
-
-	private class GetPresentations extends
-			AsyncTask<String, Integer, JSONArray> {
-		protected JSONArray doInBackground(String... url) {
-			String result = loadJsonFromNetwork(url[0]);
-			Log.d("JKP_107", result);
-			JSONArray resultJSON = null;
-			try {
-				resultJSON = new JSONArray(result);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			return resultJSON;
-		}
-
-		protected void onPostExecute(JSONArray result) {
-			try {
-				JSONArray resultJSON = result;
-				JSONObject resultObj;
-				p = new Presentation[resultJSON.length()];
-				Log.d("JKP", "Testing");
-				for (int i = 0; i < resultJSON.length(); i++) {
-					resultObj = resultJSON.getJSONObject(i);
-					p[i] = new Presentation(resultObj.getString("presName"),
-							resultObj.getInt("presId"));
-					Toast.makeText(getApplicationContext(), p[i].toString(),
-							Toast.LENGTH_SHORT).show();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
 	}
 
 	public String loadJsonFromNetwork(String jsonUrl) {
@@ -173,5 +147,4 @@ public class Home extends ListActivity {
 		}
 		return json;
 	}
-
 }

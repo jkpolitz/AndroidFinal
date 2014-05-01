@@ -55,7 +55,7 @@ public class Remote extends Activity {
 	private int currSlide = 1;
 	private String pName;
 	private Bitmap[] slideImgs;
-	
+
 	public static final String PRES_KEY = "PresKey";
 
 	private String apiInfo;
@@ -71,12 +71,12 @@ public class Remote extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d("JKP", "In remote");
 		super.onCreate(savedInstanceState);
-		
+
 		Intent intent = getIntent();
 		presID = intent.getIntExtra(PRES_KEY, presID);
 		String temp = "" + presID;
 		Log.d("JKP_75", temp);
-		
+
 		setContentView(R.layout.present);
 
 		prev = (ImageButton) findViewById(R.id.previous);
@@ -137,8 +137,7 @@ public class Remote extends Activity {
 		endPres.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(),
-						"Ending Presentation.",
+				Toast.makeText(getApplicationContext(), "Ending Presentation.",
 						Toast.LENGTH_SHORT).show();
 				endPresentation();
 			}
@@ -165,7 +164,7 @@ public class Remote extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(Activity.RESULT_OK);
@@ -186,7 +185,7 @@ public class Remote extends Activity {
 		postJSON(jsonObject, setSlide);
 
 	}
-	
+
 	private void endPresentation() {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -197,7 +196,7 @@ public class Remote extends Activity {
 		postJSON(jsonObject, end);
 		onBackPressed();
 	}
-	
+
 	private void postJSON(JSONObject json, String url) {
 		InputStream inputStream = null;
 		String result = "";
@@ -215,8 +214,7 @@ public class Remote extends Activity {
 			if (inputStream != null) {
 				result = convertInputStreamToString(inputStream);
 				Log.d("JKP_193", result);
-			}
-			else
+			} else
 				result = "Did not work!";
 
 		} catch (Exception e) {
@@ -261,14 +259,6 @@ public class Remote extends Activity {
 
 		}
 	}
-
-	/*
-	 * {"numSlides":"5", "slides":{"2":"upload/jackjp/Slides/Slide2.jpg",
-	 * "4":"upload/jackjp/Slides/Slide4.jpg",
-	 * "5":"upload/jackjp/Slides/Slide5.jpg",
-	 * "1":"upload/jackjp/Slides/Slide1.jpg",
-	 * "3":"upload/jackjp/Slides/Slide3.jpg"}}
-	 */
 
 	public String loadJsonFromNetwork(String jsonUrl) {
 		JSONObject tempJSON = null;
@@ -328,25 +318,5 @@ public class Remote extends Activity {
 		return result;
 
 	}
-
-	/*
-	 * private class GetPresInfo extends AsyncTask<String, Integer, JSONObject>
-	 * { protected JSONObject doInBackground(String... url) { String result =
-	 * loadJsonFromNetwork(url[0]); JSONObject resultJSON = null; try {
-	 * resultJSON = new JSONObject(result); } catch (JSONException e) {
-	 * e.printStackTrace(); } return resultJSON; }
-	 * 
-	 * protected void onPostExecute(JSONObject result) { try { JSONObject
-	 * resultJSON = result; //JSONArray resultArray =
-	 * resultJSON.getJSONArray("registered"); //JSONObject json =
-	 * resultArray.getJSONObject(0); verified =
-	 * resultJSON.getBoolean("registered"); } catch (Exception e) {
-	 * e.printStackTrace(); }
-	 * 
-	 * if(verified) { Toast.makeText(getApplicationContext(), "Logged In",
-	 * Toast.LENGTH_SHORT).show(); } else {
-	 * Toast.makeText(getApplicationContext(),
-	 * "Username and Password Do Not Match", Toast.LENGTH_SHORT).show(); } } }
-	 */
 
 }
