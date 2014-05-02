@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
 		login.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				findViewById(R.id.pBar).setVisibility(View.VISIBLE);
 				creds = loginURL;
 				creds+=userTV.getText().toString();
 				creds+="/";

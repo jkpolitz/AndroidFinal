@@ -5,23 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.upresent.Home"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame"
+    android:background="@drawable/bg" >
     
    <RelativeLayout
         android:id="@+id/txtContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" >
-        <Button
-            android:id="@+id/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="go to remote"
-            android:textSize="12sp" />
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="#103F7C" >
+            
+            <ImageView 
+                android:id="@+id/smallLogo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:src="@drawable/small_logo"
+                android:contentDescription="TEMP"/>
+            <TextView 
+                android:id="@+id/userName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+            	android:textColor="#ededed"/>
+            <TextView 
+                android:id="@+id/logout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Logout"
+                android:textColor="#ff9f00"/>
+            
+        </LinearLayout>
 
         <ListView
             android:id="@+id/list"
-            android:layout_below="@id/temp"
+            android:layout_below="@id/topBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusable="false" />

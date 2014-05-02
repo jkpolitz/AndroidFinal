@@ -56,6 +56,9 @@ public class Home extends Activity{
 		Intent intent = getIntent();
 		userName = intent.getStringExtra(LOGIN_KEY);
 		
+		TextView userN = (TextView) findViewById(R.id.userName);
+		userN.setText("Welcome, " + userName);
+		
 		getPres += userName;
 		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
