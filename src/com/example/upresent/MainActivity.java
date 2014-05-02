@@ -57,9 +57,6 @@ public class MainActivity extends Activity {
 				creds+=passTV.getText().toString();
 				Log.d("JKP", creds);
 				new Login().execute(creds);
-				if(verified)
-					loggedIn(userTV.getText().toString());
-				
 			}
 		});
 		
