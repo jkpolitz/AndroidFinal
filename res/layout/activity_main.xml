@@ -39,6 +39,7 @@
             android:layout_gravity="center"
             android:inputType="textPassword"
             android:gravity="center"
+            android:ellipsize="start"
             android:hint="Password"
             android:layout_centerHorizontal="true" />
 

@@ -57,6 +57,7 @@ public class Remote extends Activity {
 	private Bitmap[] slideImgs;
 
 	public static final String PRES_KEY = "PresKey";
+	public static final String PRESN_KEY = "PresNKey";
 
 	private String apiInfo;
 	private String rootURL = "http://upresent.org/";
@@ -74,8 +75,9 @@ public class Remote extends Activity {
 
 		Intent intent = getIntent();
 		presID = intent.getIntExtra(PRES_KEY, presID);
+		pName = intent.getStringExtra(PRESN_KEY);
 		String temp = "" + presID;
-		Log.d("JKP_75", temp);
+		Log.d("JKP_75", pName);
 
 		setContentView(R.layout.present);
 
@@ -85,6 +87,8 @@ public class Remote extends Activity {
 		slideImg = (ImageView) findViewById(R.id.currSlideImg);
 		presName = (TextView) findViewById(R.id.presName);
 		endPres = (Button) findViewById(R.id.endPres);
+		
+		presName.setText(pName);
 
 		apiInfo = getSlides;
 		apiInfo += presID;

@@ -74,7 +74,7 @@ public class Home extends Activity{
 					long arg3) {
 				String str = "" + arg2;
 				Log.d("JKP", str);
-				launchRemote(pres.get(arg2).presId);
+				launchRemote(pres.get(arg2).presId, pres.get(arg2).name);
 			}
 			});
 		
@@ -87,10 +87,11 @@ public class Home extends Activity{
 		});
 	}
 
-	private void launchRemote(int presID) {
+	private void launchRemote(int presID, String name) {
 		Log.d("JKP", "Launching remote");
 		Intent intent = new Intent(this, Remote.class);
 		intent.putExtra(Remote.PRES_KEY, presID);
+		intent.putExtra(Remote.PRESN_KEY, name);
 		startActivityForResult(intent, PRES_REQUEST);
 	}
 	@Override
