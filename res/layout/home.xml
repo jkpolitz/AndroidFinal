@@ -7,17 +7,25 @@
     tools:context="com.example.upresent.Home"
     tools:ignore="MergeRootFrame" >
     
-   <FrameLayout
+   <RelativeLayout
         android:id="@+id/txtContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" >
+        <Button
+            android:id="@+id/temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="go to remote"
+            android:textSize="12sp" />
 
         <ListView
             android:id="@+id/list"
+            android:layout_below="@id/temp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+            android:layout_height="match_parent"
+            android:focusable="false" />
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/pBar"

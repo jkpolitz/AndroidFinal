@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class MainActivity extends Activity {
 	String loginURL = "http://upresent.org/api/index.php/verify/";
 	private String creds;
 	boolean verified = false;
+	private static final int LOGIN_REQUEST = 309;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +57,19 @@ public class MainActivity extends Activity {
 				creds+=passTV.getText().toString();
 				Log.d("JKP", creds);
 				new Login().execute(creds);
+				if(verified)
+					loggedIn(userTV.getText().toString());
 				
 			}
 		});
 		
 		
+	}
+	private void loggedIn(String userName) {
+		Log.d("JKP", "Launching remote");
+		Intent intent = new Intent(this, Home.class);
+		intent.putExtra(Home.LOGIN_KEY, userName);
+		startActivityForResult(intent, LOGIN_REQUEST);
 	}
 
 	@Override
@@ -81,6 +91,19 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		  if (requestCode == 1) {
+
+		     if(resultCode == RESULT_OK){      
+		         String result=data.getStringExtra("result");          
+		     }
+		     if (resultCode == RESULT_CANCELED) {    
+		         //Write your code if there's no result
+		     }
+		  }
+		}
 	
 	private class Login extends AsyncTask<String, Integer, JSONObject> {
 		protected JSONObject doInBackground(String... url) {
@@ -105,6 +128,7 @@ public class MainActivity extends Activity {
 			}
 			
 			if(verified) {
+				loggedIn(userTV.getText().toString());
 				Toast.makeText(getApplicationContext(), "Logged In", Toast.LENGTH_SHORT).show();
 			} else {
 				Toast.makeText(getApplicationContext(), "Username and Password Do Not Match", Toast.LENGTH_SHORT).show();

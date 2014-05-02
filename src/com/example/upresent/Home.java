@@ -28,31 +28,52 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Home extends Activity {
+public class Home extends Activity{
 
+	String userName = "";
+	public static final String LOGIN_KEY = "Login";
 
 	private static final int PRES_REQUEST = 6349;
-	private Presentation [] pres = new Presentation[2];
+	ArrayList<Presentation> pres = new ArrayList<Presentation>();
+	//private Presentation [] pres = new Presentation[2];
 
-	public String getPres = "http://upresent.org/api/index.php/getPresentations/jackjp";
+	public String getPres = "http://upresent.org/api/index.php/getPresentations/";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-		Log.d("JKP", "content set");
+		Intent intent = getIntent();
+		userName = intent.getStringExtra(LOGIN_KEY);
+		
+		getPres += userName;
+		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
 		
 		Adapter adpt = new Adapter(this, R.layout.list_row, pres);
 		ListView list = (ListView) findViewById(R.id.list);
 		list.setAdapter(adpt);
-		Log.d("JKP", "pulled presentations");
+		Log.d("JKP", "pulled presentations");	
+		
+		list.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				String str = "" + arg2;
+				Log.d("JKP", str);
+				launchRemote(pres.get(arg2).presId);
+			}
+			});
 	}
 
 	private void launchRemote(int presID) {
@@ -60,6 +81,11 @@ public class Home extends Activity {
 		Intent intent = new Intent(this, Remote.class);
 		intent.putExtra(Remote.PRES_KEY, presID);
 		startActivityForResult(intent, PRES_REQUEST);
+	}
+	@Override
+	public void onBackPressed() {
+		setResult(Activity.RESULT_OK);
+		super.onBackPressed();
 	}
 
 	@Override
@@ -101,11 +127,13 @@ public class Home extends Activity {
 			try {
 				JSONArray resultJSON = result;
 				JSONObject resultObj;
+				
 				for (int i = 0; i < resultJSON.length(); i++) {
 					resultObj = resultJSON.getJSONObject(i);
-					pres[i] = new Presentation(resultObj.getString("presName"), resultObj.getInt("presId"));
+					pres.add(new Presentation(resultObj.getString("presName"), resultObj.getInt("presId")));
+					//notify on set changed to refresh views
 					Toast.makeText(getApplicationContext(),
-							pres[i].toString(), Toast.LENGTH_SHORT).show();
+							pres.get(i).toString(), Toast.LENGTH_SHORT).show();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

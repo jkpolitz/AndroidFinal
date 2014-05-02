@@ -293,7 +293,7 @@ public class Remote extends Activity {
 		Bitmap img = null;
 		URL url;
 		try {
-			url = new URL(imgUrl);
+			url = new URL(imgUrl.replaceAll(" ", "%20"));
 			img = BitmapFactory.decodeStream(url.openStream());
 		} catch (MalformedURLException e) {
 			Log.e("JKP", "URL is bad");

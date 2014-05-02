@@ -1,11 +1,16 @@
 package com.example.upresent;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,9 +18,9 @@ import android.widget.TextView;
 public class Adapter extends ArrayAdapter<Presentation>{
 	Context context;
 	int layoutID;
-	Presentation data[] = null;
+	ArrayList<Presentation> data = new ArrayList<Presentation>();
 	
-	public Adapter(Context context, int layoutResourceId, Presentation[] data) {
+	public Adapter(Context context, int layoutResourceId, ArrayList<Presentation> data) {
         super(context, layoutResourceId, data);
         this.layoutID = layoutResourceId;
         this.context = context;
@@ -42,7 +47,7 @@ public class Adapter extends ArrayAdapter<Presentation>{
             hd = (Holder)v.getTag();
         }
         
-        Presentation pres = data[position];
+        Presentation pres = data.get(position);
         hd.name.setText(pres.name);
         
         return v;
