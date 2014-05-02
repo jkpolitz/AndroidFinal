@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
@@ -92,15 +93,14 @@ public class MainActivity extends Activity {
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		  if (requestCode == 1) {
-
-		     if(resultCode == RESULT_OK){      
-		         String result=data.getStringExtra("result");          
+		     if(resultCode == RESULT_OK){
+		 		userTV.setText("");
+		 		passTV.setText("");
+		 		userTV.requestFocus();
 		     }
 		     if (resultCode == RESULT_CANCELED) {    
 		         //Write your code if there's no result
 		     }
-		  }
 		}
 	
 	private class Login extends AsyncTask<String, Integer, JSONObject> {

@@ -6,7 +6,7 @@
     tools:context="com.example.httpexample.MainActivity"
     tools:ignore="MergeRootFrame" >
 
-    <LinearLayout
+   <LinearLayout
         android:id="@+id/dataContainer"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -45,14 +45,6 @@
                 android:textSize="15sp"
                 android:textStyle="italic" />
         </LinearLayout>
-        <!--
-        <Button 
-	    android:id="@+id/present"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignRight="@id/txt"
-	    android:text="Present"/>
-        -->
     </LinearLayout>
 
 </RelativeLayout>

@@ -77,6 +77,14 @@ public class Home extends Activity{
 				launchRemote(pres.get(arg2).presId);
 			}
 			});
+		
+		TextView logout = (TextView) findViewById(R.id.logout);
+		logout.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v){
+				onBackPressed();
+			}
+		});
 	}
 
 	private void launchRemote(int presID) {
