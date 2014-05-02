@@ -144,8 +144,6 @@ public class Home extends Activity{
 					resultObj = resultJSON.getJSONObject(i);
 					pres.add(new Presentation(resultObj.getString("presName"), resultObj.getInt("presId")));
 					//notify on set changed to refresh views
-					Toast.makeText(getApplicationContext(),
-							pres.get(i).toString(), Toast.LENGTH_SHORT).show();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -48,7 +48,8 @@ public class Remote extends Activity {
 	public TextView slideInfo;
 	public ImageView slideImg;
 	public TextView presName;
-	public Button endPres;
+	public TextView resetPoll;
+	public TextView endPres;
 
 	private int presID;
 	private int numS = 5;
@@ -86,7 +87,8 @@ public class Remote extends Activity {
 		slideInfo = (TextView) findViewById(R.id.slideNumInfo);
 		slideImg = (ImageView) findViewById(R.id.currSlideImg);
 		presName = (TextView) findViewById(R.id.presName);
-		endPres = (Button) findViewById(R.id.endPres);
+		endPres = (TextView) findViewById(R.id.endPres);
+		resetPoll = (TextView) findViewById(R.id.resetPoll);
 		
 		presName.setText(pName);
 
@@ -95,7 +97,7 @@ public class Remote extends Activity {
 		Log.d("JKP", apiInfo);
 		// IMPLEMENT LOADING BITMAP FROM SLIDE LINKS
 		new GetSlides().execute(apiInfo);
-
+		
 		prev.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -144,6 +146,14 @@ public class Remote extends Activity {
 				Toast.makeText(getApplicationContext(), "Ending Presentation.",
 						Toast.LENGTH_SHORT).show();
 				endPresentation();
+			}
+		});
+		resetPoll.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getApplicationContext(), "Resetting Poll",
+						Toast.LENGTH_SHORT).show();
+				//resetPoll();
 			}
 		});
 
@@ -253,10 +263,6 @@ public class Remote extends Activity {
 				}
 				slideImg.setImageBitmap(slideImgs[0]);
 				slideInfo.setText(currSlide + "|" + numS);
-				Toast.makeText(getApplicationContext(), numSlides,
-						Toast.LENGTH_SHORT).show();
-				// JSONObject json = resultArray.getJSONObject(0);
-				// verified = resultJSON.getBoolean("registered");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
