@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.upresent.R;
+
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
@@ -27,7 +29,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,13 +36,9 @@ import android.widget.Toast;
 
 public class Home extends Activity {
 
-	public ListView tView;
-	public TextView txView;
 
 	private static final int PRES_REQUEST = 6349;
-
-	ArrayList<String> names = new ArrayList<String>();
-	ArrayList<Integer> ids = new ArrayList<Integer>();
+	private Presentation [] pres = new Presentation[2];
 
 	public String getPres = "http://upresent.org/api/index.php/getPresentations/jackjp";
 
@@ -49,46 +46,12 @@ public class Home extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-
-		tView = (ListView) findViewById(android.R.id.list);
-
-		String result = loadJsonFromNetwork(getPres);
-		JSONArray resultJSON = null;
-		try {
-			resultJSON = new JSONArray(result);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			JSONObject resultObj;
-			Log.d("JKP", "Testing");
-			for (int i = 0; i < resultJSON.length(); i++) {
-				resultObj = resultJSON.getJSONObject(i);
-				names.add(resultObj.getString("presName"));
-				ids.add(resultObj.getInt("presId"));
-				Toast.makeText(getApplicationContext(),
-						names.get(i).toString(), Toast.LENGTH_SHORT).show();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, android.R.id.text1, names) {
-
-			public View getView(int position, View convertView, ViewGroup parent) {
-				View v = super.getView(position, convertView, parent);
-				((TextView) v).setText(names.get(position));
-
-				
-
-				return v;
-			}
-		};
-		tView.setAdapter(adapter);
-
+		Log.d("JKP", "content set");
+		new GetPresentations().execute(getPres);
+		
+		Adapter adpt = new Adapter(this, R.layout.list_row, pres);
+		ListView list = (ListView) findViewById(R.id.list);
+		list.setAdapter(adpt);
 		Log.d("JKP", "pulled presentations");
 	}
 
@@ -119,32 +82,68 @@ public class Home extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public String loadJsonFromNetwork(String jsonUrl) {
-		JSONObject tempJSON = null;
-		String json = null;
-		HttpClient httpC = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(jsonUrl);
+	private class GetPresentations extends
+			AsyncTask<String, Integer, JSONArray> {
 
-		try {
-			HttpResponse resp = httpC.execute(httpGet);
-			StatusLine statusLine = resp.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-
-			if (statusCode == 200) {
-				HttpEntity entity = resp.getEntity();
-				InputStream stream = entity.getContent();
-				Scanner scanner = new Scanner(stream);
-				json = scanner.useDelimiter("\\A").next();
-				Log.d("JKP", json);
-				scanner.close();
-			} else {
-				Log.d("JKP", "Failed");
+		protected JSONArray doInBackground(String... url) {
+			String result = loadJsonFromNetwork(url[0]);
+			Log.d("JKP_107", result);
+			JSONArray resultJSON = null;
+			try {
+				resultJSON = new JSONArray(result);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			return resultJSON;
 		}
-		return json;
+
+		protected void onPostExecute(JSONArray result) {
+			try {
+				JSONArray resultJSON = result;
+				JSONObject resultObj;
+				for (int i = 0; i < resultJSON.length(); i++) {
+					resultObj = resultJSON.getJSONObject(i);
+					pres[i] = new Presentation(resultObj.getString("presName"), resultObj.getInt("presId"));
+					Toast.makeText(getApplicationContext(),
+							pres[i].toString(), Toast.LENGTH_SHORT).show();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			findViewById(R.id.pBar).setVisibility(View.GONE);
+			findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
+
+		}
+
+		public String loadJsonFromNetwork(String jsonUrl) {
+			JSONObject tempJSON = null;
+			String json = null;
+			HttpClient httpC = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(jsonUrl);
+
+			try {
+				HttpResponse resp = httpC.execute(httpGet);
+				StatusLine statusLine = resp.getStatusLine();
+				int statusCode = statusLine.getStatusCode();
+
+				if (statusCode == 200) {
+					HttpEntity entity = resp.getEntity();
+					InputStream stream = entity.getContent();
+					Scanner scanner = new Scanner(stream);
+					json = scanner.useDelimiter("\\A").next();
+					Log.d("JKP", json);
+					scanner.close();
+				} else {
+					Log.d("JKP", "Failed");
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return json;
+		}
+
 	}
 }
