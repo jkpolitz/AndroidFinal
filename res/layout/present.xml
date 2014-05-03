@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/bg" >
 
     <LinearLayout
@@ -25,7 +25,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="#ededed" />
+            android:textColor="#ededed"
+            android:textSize="20sp"
+            android:textStyle="italic" />
     </LinearLayout>
 
     <ImageView
@@ -34,14 +36,22 @@
         android:layout_height="200dp"
         android:layout_below="@id/topBar"
         android:layout_gravity="center"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/slideNumInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/currSlideImg"
+        android:textSize="20dp"
+        android:gravity="center" />
 
     <LinearLayout
         android:id="@+id/controls"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/currSlideImg"
-        android:layout_marginTop="25dp"
+        android:layout_below="@id/slideNumInfo"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -50,12 +60,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/prev" />
-
-        <TextView
-            android:id="@+id/slideNumInfo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:text="Slide 1/20" />
 
         <ImageButton
             android:id="@+id/next"
@@ -68,9 +72,10 @@
         android:id="@+id/options"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/controls"
-        android:layout_gravity="bottom"
+        android:layout_alignBottom="@id/controls"
+        android:layout_alignParentBottom="true"
         android:background="#103F7C"
+        android:gravity="bottom"
         android:orientation="horizontal" >
 
         <TextView

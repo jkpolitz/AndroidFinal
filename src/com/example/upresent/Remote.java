@@ -186,7 +186,7 @@ public class Remote extends Activity {
 	}
 
 	private void updateSlide() {
-		slideInfo.setText(currSlide + "|" + numS);
+		slideInfo.setText("Slide: " + currSlide + " of " + numS);
 		slideImg.setImageBitmap(slideImgs[currSlide - 1]);
 		// post slide change to server
 		JSONObject jsonObject = new JSONObject();
@@ -262,7 +262,7 @@ public class Remote extends Activity {
 					slideImgs[i] = loadImageFromNetwork(link);
 				}
 				slideImg.setImageBitmap(slideImgs[0]);
-				slideInfo.setText(currSlide + "|" + numS);
+				slideInfo.setText("Slide: " + currSlide + " of " + numS);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
