@@ -9,6 +9,8 @@
     <string name="logout">Logout</string>
     <string name="reset_poll">Reset Poll</string>
     <string name="end_pres">End Presentation</string>
+    <string name="present">Present</string>
+    <string name="delete">Delete</string>
     
     
 

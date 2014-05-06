@@ -5,11 +5,18 @@
     android:layout_height="match_parent"
     tools:context="com.example.httpexample.MainActivity"
     tools:ignore="MergeRootFrame" >
+    
+    <TextView
+        android:id="@+id/listBorder"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/black" />
 
     <LinearLayout
         android:id="@+id/dataContainer"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_below="@id/listBorder"
         android:background="#BBededed"
         android:orientation="horizontal" >
 
@@ -27,13 +34,13 @@
             android:id="@+id/bPresName"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="#88EDEDED" />
+            android:background="@color/gray" />
 
         <LinearLayout
             android:id="@+id/options"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="#662a2a2a"
+            android:background="@color/dark_gray"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -42,8 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="39dp"
                 android:gravity="center"
-                android:text="Present"
-                android:textColor="#ff9f00"
+                android:text="@string/present"
+                android:textColor="@color/orange"
                 android:textSize="15sp"
                 android:textStyle="italic" />
 
@@ -51,23 +58,17 @@
                 android:id="@+id/bPresButtons"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="#44EDEDED" />
+                android:background="@color/gray" />
 
             <TextView
                 android:id="@+id/delete"
                 android:layout_width="match_parent"
                 android:layout_height="39dp"
                 android:gravity="center"
-                android:textColor="#ff9f00"
+                android:text="@string/delete"
+                android:textColor="@color/orange"
                 android:textSize="15sp"
                 android:textStyle="italic" />
         </LinearLayout>
-
-        <!--<TextView
-            android:id="@+id/bBottom"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#99EDEDED" />  -->
     </LinearLayout>
-
 </RelativeLayout>
