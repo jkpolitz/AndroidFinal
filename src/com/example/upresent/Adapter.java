@@ -28,9 +28,10 @@ public class Adapter extends ArrayAdapter<Presentation>{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int pos, View convertView, ViewGroup parent) {
         View v = convertView;
         Holder hd = null;
+        final int position = pos;
         
         if(v == null)
         {
@@ -50,11 +51,31 @@ public class Adapter extends ArrayAdapter<Presentation>{
         Presentation pres = data.get(position);
         hd.name.setText(pres.name);
         
+        hd.present = (TextView)v.findViewById(R.id.present);
+        hd.delete = (TextView)v.findViewById(R.id.delete);
+        
+        hd.present.setOnClickListener(new OnClickListener(){
+        	@Override 
+        	public void onClick(View v) {
+        		Log.d("JKP", "present clicked");
+        		((Home)context).launchRemote(data.get(position).presId, data.get(position).name);
+        	}
+        });
+        hd.delete.setOnClickListener(new OnClickListener(){
+        	@Override 
+        	public void onClick(View v) {
+        		Log.d("JKP", "delete clicked");
+        		((Home)context).deletePresentation(data.get(position).name, position);
+        	}
+        });
+        
         return v;
     }
     
     static class Holder
     {
     	TextView name;
+    	TextView present;
+    	TextView delete;
     }
 }

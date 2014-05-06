@@ -1,7 +1,9 @@
 package com.example.upresent;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,6 +13,8 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +49,11 @@ public class Home extends Activity {
 
 	private static final int PRES_REQUEST = 6349;
 	ArrayList<Presentation> pres = new ArrayList<Presentation>();
-	// private Presentation [] pres = new Presentation[2];
+	Adapter adpt;
 
 	public String getPres = "http://upresent.org/api/index.php/getPresentations/";
-
+	public String deletePres = "http://upresent.org/api/index.php/deletePresentation";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,20 +68,10 @@ public class Home extends Activity {
 		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
 
-		Adapter adpt = new Adapter(this, R.layout.list_row, pres);
+		adpt = new Adapter(this, R.layout.list_row, pres);
 		ListView list = (ListView) findViewById(R.id.list);
 		list.setAdapter(adpt);
 		Log.d("JKP", "pulled presentations");
-
-		list.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				String str = "" + arg2;
-				Log.d("JKP", str);
-				launchRemote(pres.get(arg2).presId, pres.get(arg2).name);
-			}
-		});
 
 		TextView logout = (TextView) findViewById(R.id.logout);
 		logout.setOnClickListener(new OnClickListener() {
@@ -87,12 +82,30 @@ public class Home extends Activity {
 		});
 	}
 
-	private void launchRemote(int presID, String name) {
+	void launchRemote(int presID, String name) {
 		Log.d("JKP", "Launching remote");
 		Intent intent = new Intent(this, Remote.class);
 		intent.putExtra(Remote.PRES_KEY, presID);
 		intent.putExtra(Remote.PRESN_KEY, name);
 		startActivityForResult(intent, PRES_REQUEST);
+	}
+	
+	void deletePresentation(String pName, int pos) {
+		Log.d("JKP", "Deleting Presentation");
+		// post slide change to server
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.accumulate("title", pName);
+			jsonObject.accumulate("username", userName);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		postJSON(jsonObject, deletePres);
+		pres.remove(pos);
+        adpt.notifyDataSetChanged();
+		/*Intent intent = getIntent();
+		finish();
+		startActivity(intent);*/
 	}
 
 	@Override
@@ -175,6 +188,43 @@ public class Home extends Activity {
 			}
 			return json;
 		}
+
+	}
+	private void postJSON(JSONObject json, String url) {
+		InputStream inputStream = null;
+		String result = "";
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(url);
+			String jsonS = "";
+			jsonS = json.toString();
+			StringEntity se = new StringEntity(jsonS);
+			httpPost.setEntity(se);
+			httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("Content-type", "application/json");
+			HttpResponse httpResponse = httpclient.execute(httpPost);
+			inputStream = httpResponse.getEntity().getContent();
+			if (inputStream != null) {
+				result = convertInputStreamToString(inputStream);
+				Log.d("JKP_193", result);
+			} else
+				result = "Did not work!";
+
+		} catch (Exception e) {
+			Log.d("InputStream", e.getLocalizedMessage());
+		}
+	}
+	private static String convertInputStreamToString(InputStream inputStream)
+			throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(inputStream));
+		String line = "";
+		String result = "";
+		while ((line = bufferedReader.readLine()) != null)
+			result += line;
+
+		inputStream.close();
+		return result;
 
 	}
 }
