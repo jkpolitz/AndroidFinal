@@ -38,14 +38,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Home extends Activity{
+public class Home extends Activity {
 
 	String userName = "";
 	public static final String LOGIN_KEY = "Login";
 
 	private static final int PRES_REQUEST = 6349;
 	ArrayList<Presentation> pres = new ArrayList<Presentation>();
-	//private Presentation [] pres = new Presentation[2];
+	// private Presentation [] pres = new Presentation[2];
 
 	public String getPres = "http://upresent.org/api/index.php/getPresentations/";
 
@@ -55,20 +55,20 @@ public class Home extends Activity{
 		setContentView(R.layout.home);
 		Intent intent = getIntent();
 		userName = intent.getStringExtra(LOGIN_KEY);
-		
+
 		TextView userN = (TextView) findViewById(R.id.userName);
 		userN.setText("Welcome, " + userName);
-		
+
 		getPres += userName;
 		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
-		
+
 		Adapter adpt = new Adapter(this, R.layout.list_row, pres);
 		ListView list = (ListView) findViewById(R.id.list);
 		list.setAdapter(adpt);
-		Log.d("JKP", "pulled presentations");	
-		
-		list.setOnItemClickListener(new OnItemClickListener(){
+		Log.d("JKP", "pulled presentations");
+
+		list.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
@@ -76,12 +76,12 @@ public class Home extends Activity{
 				Log.d("JKP", str);
 				launchRemote(pres.get(arg2).presId, pres.get(arg2).name);
 			}
-			});
-		
+		});
+
 		TextView logout = (TextView) findViewById(R.id.logout);
-		logout.setOnClickListener(new OnClickListener(){
+		logout.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v){
+			public void onClick(View v) {
 				onBackPressed();
 			}
 		});
@@ -94,6 +94,7 @@ public class Home extends Activity{
 		intent.putExtra(Remote.PRESN_KEY, name);
 		startActivityForResult(intent, PRES_REQUEST);
 	}
+
 	@Override
 	public void onBackPressed() {
 		setResult(Activity.RESULT_OK);
@@ -127,8 +128,15 @@ public class Home extends Activity{
 			String result = loadJsonFromNetwork(url[0]);
 			Log.d("JKP_107", result);
 			JSONArray resultJSON = null;
+			JSONObject resultObj = null;
+
 			try {
 				resultJSON = new JSONArray(result);
+				for (int i = 0; i < resultJSON.length(); i++) {
+					resultObj = resultJSON.getJSONObject(i);
+					pres.add(new Presentation(resultObj.getString("presName"),
+							resultObj.getInt("presId")));
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -136,26 +144,11 @@ public class Home extends Activity{
 		}
 
 		protected void onPostExecute(JSONArray result) {
-			try {
-				JSONArray resultJSON = result;
-				JSONObject resultObj;
-				
-				for (int i = 0; i < resultJSON.length(); i++) {
-					resultObj = resultJSON.getJSONObject(i);
-					pres.add(new Presentation(resultObj.getString("presName"), resultObj.getInt("presId")));
-					//notify on set changed to refresh views
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
 			findViewById(R.id.pBar).setVisibility(View.GONE);
 			findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
-
 		}
 
 		public String loadJsonFromNetwork(String jsonUrl) {
-			JSONObject tempJSON = null;
 			String json = null;
 			HttpClient httpC = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(jsonUrl);

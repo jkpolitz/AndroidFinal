@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Logout"
+                android:text="@string/logout"
                 android:textColor="#ff9f00" />
         </LinearLayout>
 
@@ -51,22 +51,14 @@
             android:id="@+id/border"
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="#FFC6CFD4"
-            android:layout_below="@id/topBar" />
-        <TextView
-            android:id="@+id/heading"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@id/border"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="My UPresents" />
+            android:layout_below="@id/topBar"
+            android:background="#FFC6CFD4" />
 
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/heading"
+            android:layout_below="@id/border"
             android:focusable="false" />
     </RelativeLayout>
 

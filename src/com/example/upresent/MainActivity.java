@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 		userTV = (TextView) findViewById(R.id.userN);
 		passTV = (TextView) findViewById(R.id.pass);
 		userTV.setText("jack");
-		passTV.setText("kenneth");
+		passTV.setText("kenneth'");
 		
 		login.setOnClickListener(new Button.OnClickListener() {
 			@Override

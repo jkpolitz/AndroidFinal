@@ -38,6 +38,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
@@ -89,7 +91,7 @@ public class Remote extends Activity {
 		presName = (TextView) findViewById(R.id.presName);
 		endPres = (TextView) findViewById(R.id.endPres);
 		resetPoll = (TextView) findViewById(R.id.resetPoll);
-		
+
 		presName.setText(pName);
 
 		apiInfo = getSlides;
@@ -97,7 +99,7 @@ public class Remote extends Activity {
 		Log.d("JKP", apiInfo);
 		// IMPLEMENT LOADING BITMAP FROM SLIDE LINKS
 		new GetSlides().execute(apiInfo);
-		
+
 		prev.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -153,7 +155,7 @@ public class Remote extends Activity {
 			public void onClick(View v) {
 				Toast.makeText(getApplicationContext(), "Resetting Poll",
 						Toast.LENGTH_SHORT).show();
-				//resetPoll();
+				// resetPoll();
 			}
 		});
 
@@ -183,6 +185,7 @@ public class Remote extends Activity {
 	public void onBackPressed() {
 		setResult(Activity.RESULT_OK);
 		super.onBackPressed();
+		this.finish();
 	}
 
 	private void updateSlide() {
@@ -240,18 +243,10 @@ public class Remote extends Activity {
 		protected JSONObject doInBackground(String... url) {
 			String result = loadJsonFromNetwork(url[0]);
 			JSONObject resultJSON = null;
+			JSONObject resultSlides = null;
 			try {
 				resultJSON = new JSONObject(result);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			return resultJSON;
-		}
-
-		protected void onPostExecute(JSONObject result) {
-			try {
-				JSONObject resultJSON = result;
-				JSONObject resultSlides = resultJSON.getJSONObject("slides");
+				resultSlides = resultJSON.getJSONObject("slides");
 				String numSlides = resultJSON.getString("numSlides");
 				numS = Integer.parseInt(numSlides);
 				slideImgs = new Bitmap[numS];
@@ -261,17 +256,24 @@ public class Remote extends Activity {
 					link += resultSlides.getString(key);
 					slideImgs[i] = loadImageFromNetwork(link);
 				}
-				slideImg.setImageBitmap(slideImgs[0]);
-				slideInfo.setText("Slide: " + currSlide + " of " + numS);
-			} catch (Exception e) {
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 
+			return resultJSON;
+		}
+
+		protected void onPostExecute(JSONObject result) {
+			slideImg.setImageBitmap(slideImgs[0]);
+			slideInfo.setText("Slide: " + currSlide + " of " + numS);
+			RelativeLayout rL = (RelativeLayout) findViewById(R.id.onLoad);
+			rL.setVisibility(View.VISIBLE);
+			rL = (RelativeLayout) findViewById(R.id.onLoading);
+			rL.setVisibility(View.GONE);
 		}
 	}
 
 	public String loadJsonFromNetwork(String jsonUrl) {
-		JSONObject tempJSON = null;
 		String json = null;
 		HttpClient httpC = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(jsonUrl);
