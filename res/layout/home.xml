@@ -18,7 +18,7 @@
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#FF103F7C"
+            android:background="@color/blue"
             android:orientation="horizontal" >
 
             <ImageView
@@ -35,7 +35,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#ededed" />
+                android:textColor="@color/gray" />
 
             <TextView
                 android:id="@+id/logout"
@@ -44,7 +44,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/logout"
-                android:textColor="#ff9f00" />
+                android:textColor="@color/orange" />
         </LinearLayout>
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_below="@id/topBar"
-            android:background="#FFC6CFD4" />
+            android:background="@color/gray" />
 
         <ListView
             android:id="@+id/list"
@@ -60,6 +60,18 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/border"
             android:focusable="false" />
+        <TextView 
+            android:id="@+id/empty"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/border"
+            android:textColor="@color/blue"
+            android:layout_marginTop="150dp"
+            android:visibility="gone"
+            android:text="@string/empty"/>
 
         <LinearLayout
             android:id="@+id/bottomBar"

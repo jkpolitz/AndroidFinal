@@ -165,10 +165,6 @@ public class Home extends Activity {
 				}
 			} else {
 				empty = true;
-				/*Toast.makeText(
-						getApplicationContext(),
-						"You have no UPresents. Please visit UPresent.com to create one!",
-						Toast.LENGTH_SHORT).show();*/
 			}
 			return resultJSON;
 		}
@@ -177,9 +173,15 @@ public class Home extends Activity {
 			findViewById(R.id.pBar).setVisibility(View.GONE);
 			if (!empty) {
 				findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
+				findViewById(R.id.list).setVisibility(View.VISIBLE);
+				findViewById(R.id.empty).setVisibility(View.GONE);
 				adpt = new Adapter(((Home) context), R.layout.list_row, pres);
 				ListView list = (ListView) findViewById(R.id.list);
 				list.setAdapter(adpt);
+			} else {
+				findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
+				findViewById(R.id.list).setVisibility(View.GONE);
+				findViewById(R.id.empty).setVisibility(View.VISIBLE);
 			}
 		}
 
