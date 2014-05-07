@@ -46,6 +46,7 @@ public class Home extends Activity {
 	ArrayList<Presentation> pres = new ArrayList<Presentation>();
 	Adapter adpt;
 	ListView list;
+	private Boolean empty = false;
 
 	public String getPres = "http://upresent.org/api/index.php/getPresentations/";
 	public String deletePres = "http://upresent.org/api/index.php/deletePresentation";
@@ -64,7 +65,6 @@ public class Home extends Activity {
 		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
 
-		
 		Log.d("JKP", "pulled presentations");
 
 		TextView logout = (TextView) findViewById(R.id.logout);
@@ -120,6 +120,7 @@ public class Home extends Activity {
 	@Override
 	public void onBackPressed() {
 		setResult(Activity.RESULT_OK);
+		pres.clear();
 		super.onBackPressed();
 	}
 
@@ -147,27 +148,39 @@ public class Home extends Activity {
 		protected JSONArray doInBackground(String... url) {
 			String result = loadJsonFromNetwork(url[0]);
 			JSONArray resultJSON = null;
-			JSONObject resultObj = null;
+			if (result != "") {
+				empty = false;
+				JSONObject resultObj = null;
 
-			try {
-				resultJSON = new JSONArray(result);
-				for (int i = 0; i < resultJSON.length(); i++) {
-					resultObj = resultJSON.getJSONObject(i);
-					pres.add(new Presentation(resultObj.getString("presName"),
-							resultObj.getInt("presId")));
+				try {
+					resultJSON = new JSONArray(result);
+					for (int i = 0; i < resultJSON.length(); i++) {
+						resultObj = resultJSON.getJSONObject(i);
+						pres.add(new Presentation(resultObj
+								.getString("presName"), resultObj
+								.getInt("presId")));
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-			} catch (JSONException e) {
-				e.printStackTrace();
+			} else {
+				empty = true;
+				/*Toast.makeText(
+						getApplicationContext(),
+						"You have no UPresents. Please visit UPresent.com to create one!",
+						Toast.LENGTH_SHORT).show();*/
 			}
 			return resultJSON;
 		}
 
 		protected void onPostExecute(JSONArray result) {
 			findViewById(R.id.pBar).setVisibility(View.GONE);
-			findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
-			adpt = new Adapter(((Home)context), R.layout.list_row, pres);
-			ListView list = (ListView) findViewById(R.id.list);
-			list.setAdapter(adpt);
+			if (!empty) {
+				findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
+				adpt = new Adapter(((Home) context), R.layout.list_row, pres);
+				ListView list = (ListView) findViewById(R.id.list);
+				list.setAdapter(adpt);
+			}
 		}
 
 		public String loadJsonFromNetwork(String jsonUrl) {
@@ -183,9 +196,7 @@ public class Home extends Activity {
 				if (statusCode == 200) {
 					HttpEntity entity = resp.getEntity();
 					InputStream stream = entity.getContent();
-					Scanner scanner = new Scanner(stream);
-					json = scanner.useDelimiter("\\A").next();
-					scanner.close();
+					json = getResponseTextTraditionalWay(stream);
 				} else {
 					Log.d("JKP", "Failed");
 				}
@@ -197,6 +208,18 @@ public class Home extends Activity {
 			return json;
 		}
 
+		private String getResponseTextTraditionalWay(InputStream stream)
+				throws IOException {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					stream));
+			StringBuilder sb = new StringBuilder();
+			String line = reader.readLine();
+			while (line != null) {
+				sb.append(line + "\n");
+				line = reader.readLine();
+			}
+			return sb.toString();
+		}
 	}
 
 	private void postJSON(JSONObject json, String url) {
