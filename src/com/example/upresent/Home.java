@@ -107,7 +107,7 @@ public class Home extends Activity {
 		}
 		Toast.makeText(getApplicationContext(), "Deleting: " + pName,
 				Toast.LENGTH_SHORT).show();
-		postJSON(jsonObject, deletePres);
+		new DeletePresentation().execute(jsonObject);
 		pres.remove(pos);
 		adpt.notifyDataSetChanged();
 	}
@@ -221,42 +221,23 @@ public class Home extends Activity {
 			return sb.toString();
 		}
 	}
-
-	private void postJSON(JSONObject json, String url) {
-		InputStream inputStream = null;
-		String result;
-		try {
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url);
-			String jsonS = "";
-			jsonS = json.toString();
-			StringEntity se = new StringEntity(jsonS);
-			httpPost.setEntity(se);
-			httpPost.setHeader("Accept", "application/json");
-			httpPost.setHeader("Content-type", "application/json");
-			HttpResponse httpResponse = httpclient.execute(httpPost);
-			inputStream = httpResponse.getEntity().getContent();
-			if (inputStream != null) {
-				result = convertInputStreamToString(inputStream);
-			} else {
-				result = "Did not work!";
+	private class DeletePresentation extends AsyncTask<JSONObject, Integer, JSONObject> {
+		protected JSONObject doInBackground(JSONObject... obj) {
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(deletePres);
+				String jsonS = "";
+				jsonS = obj[0].toString();
+				StringEntity se = new StringEntity(jsonS);
+				httpPost.setEntity(se);
+				httpPost.setHeader("Accept", "application/json");
+				httpPost.setHeader("Content-type", "application/json");
+				httpclient.execute(httpPost);
+			} catch (Exception e) {
+				Log.d("InputStream", e.getLocalizedMessage());
 			}
-
-		} catch (Exception e) {
-			Log.d("InputStream", e.getLocalizedMessage());
+			return null;
 		}
 	}
 
-	private static String convertInputStreamToString(InputStream inputStream)
-			throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(inputStream));
-		String line = "";
-		String result = "";
-		while ((line = bufferedReader.readLine()) != null)
-			result += line;
-
-		inputStream.close();
-		return result;
-	}
 }
