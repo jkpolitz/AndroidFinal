@@ -50,14 +50,22 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				findViewById(R.id.pBar).setVisibility(View.VISIBLE);
-				creds = loginURL;
-				creds += userTV.getText().toString();
-				creds += "/";
-				creds += passTV.getText().toString();
-				new Login().execute(creds);
+				String userN = userTV.getText().toString();
+				String passW = passTV.getText().toString();
+				Log.d("JKP", userN + " : " + passW);
+				if (userN.matches("") || passW.matches("")) {
+					Toast.makeText(getApplicationContext(),
+							"Username and Password Do Not Match",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					creds = loginURL;
+					creds += userN;
+					creds += "/";
+					creds += passW;
+					new Login().execute(creds);
+				}
 			}
 		});
-
 	}
 
 	private void loggedIn(String userName) {

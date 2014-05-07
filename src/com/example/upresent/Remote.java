@@ -65,13 +65,11 @@ public class Remote extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d("JKP", "In remote");
 		super.onCreate(savedInstanceState);
 
 		Intent intent = getIntent();
 		presID = intent.getIntExtra(PRES_KEY, presID);
 		pName = intent.getStringExtra(PRESN_KEY);
-		Log.d("JKP_75", pName);
 
 		setContentView(R.layout.present);
 
@@ -87,14 +85,11 @@ public class Remote extends Activity {
 
 		apiInfo = getSlides;
 		apiInfo += presID;
-		Log.d("JKP", apiInfo);
-		// IMPLEMENT LOADING BITMAP FROM SLIDE LINKS
 		new GetSlides().execute(apiInfo);
 
 		prev.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// UPDATE SLIDES
 				if (currSlide > 1) {
 					currSlide--;
 					updateSlide();
@@ -108,7 +103,6 @@ public class Remote extends Activity {
 		next.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// UPDATE SLIDES
 				if (currSlide < numS) {
 					currSlide++;
 					updateSlide();
@@ -122,7 +116,6 @@ public class Remote extends Activity {
 		slideImg.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// UPDATE SLIDES
 				if (currSlide < numS) {
 					currSlide++;
 					updateSlide();
@@ -149,7 +142,6 @@ public class Remote extends Activity {
 				}
 			}
 		});
-
 	}
 
 	@Override
@@ -182,7 +174,6 @@ public class Remote extends Activity {
 	private void updateSlide() {
 		slideInfo.setText("Slide: " + currSlide + " of " + numS);
 		slideImg.setImageBitmap(slideImgs[currSlide - 1]);
-		// post slide change to server
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.accumulate("presId", presID);
@@ -198,7 +189,6 @@ public class Remote extends Activity {
 				Toast.LENGTH_SHORT).show();
 		String json = "{\"presId\":\"" + presID + "\",\"slide\":" + currSlide
 				+ "}";
-		Log.d("JKP", json);
 		new ResetPoll().execute(json);
 	}
 
@@ -336,7 +326,6 @@ public class Remote extends Activity {
 				InputStream stream = entity.getContent();
 				Scanner scanner = new Scanner(stream);
 				json = scanner.useDelimiter("\\A").next();
-				Log.d("JKP", json);
 				scanner.close();
 			} else {
 				Log.d("JKP", "Failed");
