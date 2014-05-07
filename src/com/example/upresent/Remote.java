@@ -71,8 +71,6 @@ public class Remote extends Activity {
 	private String setSlide = "http://upresent.org/api/index.php/setCurrentSlide";
 	private String end = "http://upresent.org/api/index.php/finishPresentation";
 	private String getSlideInfo = "http://upresent.org/api/index.php/getCurrentSlide/";
-	
-	// private String slideURLs = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -201,22 +199,7 @@ public class Remote extends Activity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		postJSON(jsonObject, setSlide);
-		String temp = getSlideInfo + presID;
-		try {
-			JSONObject result = new JSONObject(loadJsonFromNetwork(temp));
-			temp = result.getString("poll");
-			if(temp == "false") {
-				resetPoll.setTextColor(Color.parseColor("#BBEDEDED"));
-				poll = false;
-			} else {
-				resetPoll.setTextColor(Color.parseColor("#FFFF9F00"));
-				poll = true;
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
+		new UpdateSlide().execute(jsonObject);
 	}
 	
 	private void resetPoll() {
@@ -224,7 +207,7 @@ public class Remote extends Activity {
 				Toast.LENGTH_SHORT).show();
 		String json = "{\"presId\":\"" + presID + "\",\"slide\":" + currSlide + "}";
 		Log.d("JKP", json);
-		postJSONString(json, reset);
+		new ResetPoll().execute(json);
 	}
 
 	private void endPresentation() {
@@ -234,55 +217,8 @@ public class Remote extends Activity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		postJSON(jsonObject, end);
+		new EndPresentation().execute(jsonObject);
 		onBackPressed();
-	}
-
-	private void postJSON(JSONObject json, String url) {
-		InputStream inputStream = null;
-		String result = "";
-		try {
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url);
-			String jsonS = "";
-			jsonS = json.toString();
-			StringEntity se = new StringEntity(jsonS);
-			httpPost.setEntity(se);
-			httpPost.setHeader("Accept", "application/json");
-			httpPost.setHeader("Content-type", "application/json");
-			HttpResponse httpResponse = httpclient.execute(httpPost);
-			inputStream = httpResponse.getEntity().getContent();
-			if (inputStream != null) {
-				result = convertInputStreamToString(inputStream);
-				Log.d("JKP_193", result);
-			} else
-				result = "Did not work!";
-
-		} catch (Exception e) {
-			Log.d("InputStream", e.getLocalizedMessage());
-		}
-	}
-	private void postJSONString(String json, String url) {
-		InputStream inputStream = null;
-		String result = "";
-		try {
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url);
-			StringEntity se = new StringEntity(json);
-			httpPost.setEntity(se);
-			httpPost.setHeader("Accept", "application/json");
-			httpPost.setHeader("Content-type", "application/json");
-			HttpResponse httpResponse = httpclient.execute(httpPost);
-			inputStream = httpResponse.getEntity().getContent();
-			if (inputStream != null) {
-				result = convertInputStreamToString(inputStream);
-				Log.d("JKP_193", result);
-			} else
-				result = "Did not work!";
-
-		} catch (Exception e) {
-			Log.d("InputStream", e.getLocalizedMessage());
-		}
 	}
 
 	private class GetSlides extends AsyncTask<String, Integer, JSONObject> {
@@ -315,6 +251,76 @@ public class Remote extends Activity {
 			rL.setVisibility(View.VISIBLE);
 			rL = (RelativeLayout) findViewById(R.id.onLoading);
 			rL.setVisibility(View.GONE);
+		}
+	}
+	private class UpdateSlide extends AsyncTask<JSONObject, Integer, JSONObject> {
+		protected JSONObject doInBackground(JSONObject... obj) {
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(setSlide);
+				String jsonS = "";
+				jsonS = obj[0].toString();
+				StringEntity se = new StringEntity(jsonS);
+				httpPost.setEntity(se);
+				httpPost.setHeader("Accept", "application/json");
+				httpPost.setHeader("Content-type", "application/json");
+				httpclient.execute(httpPost);
+				String temp = getSlideInfo + presID;
+				JSONObject result = new JSONObject(loadJsonFromNetwork(temp));
+				temp = result.getString("poll");
+				if(temp == "false") {
+					poll = false;
+				} else {
+					poll = true;
+				}
+				
+			} catch (Exception e) {
+				Log.d("InputStream", e.getLocalizedMessage());
+			}
+			
+			return null;
+		}
+
+		protected void onPostExecute(JSONObject result) {
+			if(poll) {
+				resetPoll.setTextColor(Color.parseColor("#FFFF9F00"));
+			} else {
+				resetPoll.setTextColor(Color.parseColor("#BBEDEDED"));
+			}
+		}
+	}
+	private class EndPresentation extends AsyncTask<JSONObject, Integer, JSONObject> {
+		protected JSONObject doInBackground(JSONObject... obj) {
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(end);
+				String jsonS = "";
+				jsonS = obj[0].toString();
+				StringEntity se = new StringEntity(jsonS);
+				httpPost.setEntity(se);
+				httpPost.setHeader("Accept", "application/json");
+				httpPost.setHeader("Content-type", "application/json");
+				httpclient.execute(httpPost);
+			} catch (Exception e) {
+				Log.d("InputStream", e.getLocalizedMessage());
+			}
+			return null;
+		}
+	}
+	private class ResetPoll extends AsyncTask<String, Integer, JSONObject> {
+		protected JSONObject doInBackground(String... json) {
+			try {
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(reset);
+				StringEntity se = new StringEntity(json[0]);
+				httpPost.setEntity(se);
+				httpPost.setHeader("Accept", "application/json");
+				httpPost.setHeader("Content-type", "application/json");
+				httpclient.execute(httpPost);
+			} catch (Exception e) {
+				Log.d("InputStream", e.getLocalizedMessage());
+			}
+			return null;
 		}
 	}
 
