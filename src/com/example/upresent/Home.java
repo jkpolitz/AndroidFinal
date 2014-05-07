@@ -23,7 +23,6 @@ import org.json.JSONObject;
 import com.example.upresent.R;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -33,11 +32,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -131,8 +125,6 @@ public class Home extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -154,7 +146,6 @@ public class Home extends Activity {
 
 		protected JSONArray doInBackground(String... url) {
 			String result = loadJsonFromNetwork(url[0]);
-			Log.d("JKP_107", result);
 			JSONArray resultJSON = null;
 			JSONObject resultObj = null;
 
@@ -194,7 +185,6 @@ public class Home extends Activity {
 					InputStream stream = entity.getContent();
 					Scanner scanner = new Scanner(stream);
 					json = scanner.useDelimiter("\\A").next();
-					Log.d("JKP", json);
 					scanner.close();
 				} else {
 					Log.d("JKP", "Failed");
@@ -211,7 +201,7 @@ public class Home extends Activity {
 
 	private void postJSON(JSONObject json, String url) {
 		InputStream inputStream = null;
-		String result = "";
+		String result;
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httpPost = new HttpPost(url);
@@ -225,9 +215,9 @@ public class Home extends Activity {
 			inputStream = httpResponse.getEntity().getContent();
 			if (inputStream != null) {
 				result = convertInputStreamToString(inputStream);
-				Log.d("JKP_193", result);
-			} else
+			} else {
 				result = "Did not work!";
+			}
 
 		} catch (Exception e) {
 			Log.d("InputStream", e.getLocalizedMessage());
@@ -245,6 +235,5 @@ public class Home extends Activity {
 
 		inputStream.close();
 		return result;
-
 	}
 }
