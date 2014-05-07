@@ -158,7 +158,7 @@ public class Home extends Activity {
 			JSONArray resultJSON = null;
 			JSONObject resultObj = null;
 
-			/*try {
+			try {
 				resultJSON = new JSONArray(result);
 				for (int i = 0; i < resultJSON.length(); i++) {
 					resultObj = resultJSON.getJSONObject(i);
@@ -167,7 +167,7 @@ public class Home extends Activity {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}*/
+			}
 			return resultJSON;
 		}
 
