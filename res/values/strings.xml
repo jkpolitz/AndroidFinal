@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_settings">Settings</string>
+    <string name="name">Developer: John Politz</string>
     <string name="app_name">UPresent</string>
     <string name="username">Username</string>
     <string name="password">Password</string>

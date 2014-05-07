@@ -382,7 +382,6 @@ int string abc_searchview_description_submit 0x7f0a0007
 int string abc_searchview_description_voice 0x7f0a0008
 int string abc_shareactionprovider_share_with 0x7f0a000c
 int string abc_shareactionprovider_share_with_application 0x7f0a000b
-int string action_settings 0x7f0a000d
 int string app_name 0x7f0a000e
 int string delete 0x7f0a0016
 int string des 0x7f0a0019
@@ -390,6 +389,7 @@ int string empty 0x7f0a0018
 int string end_pres 0x7f0a0014
 int string login 0x7f0a0011
 int string logout 0x7f0a0012
+int string name 0x7f0a000d
 int string password 0x7f0a0010
 int string present 0x7f0a0015
 int string refresh 0x7f0a0017
