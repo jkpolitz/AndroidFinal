@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -62,10 +61,7 @@ public class Home extends Activity {
 		userN.setText("Welcome, " + userName);
 
 		getPres += userName;
-		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
-
-		Log.d("JKP", "pulled presentations");
 
 		TextView logout = (TextView) findViewById(R.id.logout);
 		TextView refresh = (TextView) findViewById(R.id.refresh);
@@ -88,7 +84,6 @@ public class Home extends Activity {
 	}
 
 	void launchRemote(int presID, String name) {
-		Log.d("JKP", "Launching remote");
 		Intent intent = new Intent(this, Remote.class);
 		intent.putExtra(Remote.PRES_KEY, presID);
 		intent.putExtra(Remote.PRESN_KEY, name);
@@ -96,8 +91,6 @@ public class Home extends Activity {
 	}
 
 	void deletePresentation(String pName, int pos) {
-		Log.d("JKP", "Deleting Presentation");
-		// post slide change to server
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.accumulate("title", pName);
@@ -223,7 +216,9 @@ public class Home extends Activity {
 			return sb.toString();
 		}
 	}
-	private class DeletePresentation extends AsyncTask<JSONObject, Integer, JSONObject> {
+
+	private class DeletePresentation extends
+			AsyncTask<JSONObject, Integer, JSONObject> {
 		protected JSONObject doInBackground(JSONObject... obj) {
 			try {
 				HttpClient httpclient = new DefaultHttpClient();

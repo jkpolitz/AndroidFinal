@@ -14,7 +14,7 @@
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#103F7C"
+            android:background="@color/blue"
             android:orientation="horizontal" >
 
             <ImageView
@@ -22,7 +22,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".2"
-                android:contentDescription="TEMP"
+                android:contentDescription="@string/des"
                 android:src="@drawable/small_logo" />
 
             <TextView
@@ -31,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#ededed"
+                android:textColor="@color/gray"
                 android:textSize="20sp"
                 android:textStyle="italic" />
         </LinearLayout>
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_below="@id/topBar"
-            android:background="#FFC6CFD4" />
+            android:background="@color/border" />
 
         <ImageView
             android:id="@+id/currSlideImg"
@@ -49,15 +49,16 @@
             android:layout_height="200dp"
             android:layout_below="@id/border"
             android:layout_gravity="center"
-            android:layout_marginTop="25dp" />
+            android:layout_marginTop="25dp"
+            android:contentDescription="@string/des" />
 
         <TextView
             android:id="@+id/slideNumInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/currSlideImg"
-            android:gravity="center"
             android:layout_marginTop="10dp"
+            android:gravity="center"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -75,6 +76,7 @@
                 android:layout_height="100dp"
                 android:layout_marginRight="75dp"
                 android:background="@null"
+                android:contentDescription="@string/des"
                 android:src="@drawable/prev" />
 
             <ImageButton
@@ -82,6 +84,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@null"
+                android:contentDescription="@string/des"
                 android:src="@drawable/next" />
         </LinearLayout>
 
@@ -90,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_above="@id/options"
-            android:background="@color/gray" />
+            android:background="@color/border" />
 
         <LinearLayout
             android:id="@+id/options"

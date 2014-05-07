@@ -7,18 +7,18 @@ public class Presentation {
 	public String author;
 	public String date;
 	public int presId;
-	public Bitmap [] imgs;
-	public String [] urls;
-	
-	public Presentation () {
+	public Bitmap[] imgs;
+	public String[] urls;
+
+	public Presentation() {
 		super();
 	}
-	
-	public Presentation(String name, int presID){
+
+	public Presentation(String name, int presID) {
 		this.name = name;
 		this.presId = presID;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

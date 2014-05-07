@@ -116,12 +116,13 @@ int bool abc_config_actionMenuItemAllCaps 0x7f060005
 int bool abc_config_allowActionMenuItemTextWithIcon 0x7f060004
 int bool abc_config_showMenuShortcutsWhenKeyboardPresent 0x7f060003
 int bool abc_split_action_bar_is_narrow 0x7f060002
-int color abc_search_url_text_holo 0x7f070008
+int color abc_search_url_text_holo 0x7f070009
 int color abc_search_url_text_normal 0x7f070000
 int color abc_search_url_text_pressed 0x7f070002
 int color abc_search_url_text_selected 0x7f070001
 int color black 0x7f070003
 int color blue 0x7f070004
+int color border 0x7f070008
 int color dark_gray 0x7f070007
 int color gray 0x7f070006
 int color orange 0x7f070005
@@ -384,6 +385,7 @@ int string abc_shareactionprovider_share_with_application 0x7f0a000b
 int string action_settings 0x7f0a000d
 int string app_name 0x7f0a000e
 int string delete 0x7f0a0016
+int string des 0x7f0a0019
 int string empty 0x7f0a0018
 int string end_pres 0x7f0a0014
 int string login 0x7f0a0011

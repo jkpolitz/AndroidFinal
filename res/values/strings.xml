@@ -13,7 +13,6 @@
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>
     <string name="empty">You have no UPresents. Please visit UPresent.org to create one!</string>
-    
-    
+    <string name="des">Image Description</string>
 
 </resources>

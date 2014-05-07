@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void loggedIn(String userName) {
-		Log.d("JKP", "Verified Login");
 		Intent intent = new Intent(this, Home.class);
 		intent.putExtra(Home.LOGIN_KEY, userName);
 		startActivityForResult(intent, LOGIN_REQUEST);

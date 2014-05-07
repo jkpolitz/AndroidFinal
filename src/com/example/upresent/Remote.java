@@ -1,9 +1,7 @@
 package com.example.upresent;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
@@ -17,11 +15,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.example.upresent.MainActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,19 +26,15 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
 
 public class Remote extends Activity {
 	public ImageButton prev;
@@ -153,7 +144,7 @@ public class Remote extends Activity {
 		resetPoll.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(poll){
+				if (poll) {
 					resetPoll();
 				}
 			}
@@ -201,11 +192,12 @@ public class Remote extends Activity {
 		}
 		new UpdateSlide().execute(jsonObject);
 	}
-	
+
 	private void resetPoll() {
 		Toast.makeText(getApplicationContext(), "Resetting Poll",
 				Toast.LENGTH_SHORT).show();
-		String json = "{\"presId\":\"" + presID + "\",\"slide\":" + currSlide + "}";
+		String json = "{\"presId\":\"" + presID + "\",\"slide\":" + currSlide
+				+ "}";
 		Log.d("JKP", json);
 		new ResetPoll().execute(json);
 	}
@@ -253,7 +245,9 @@ public class Remote extends Activity {
 			rL.setVisibility(View.GONE);
 		}
 	}
-	private class UpdateSlide extends AsyncTask<JSONObject, Integer, JSONObject> {
+
+	private class UpdateSlide extends
+			AsyncTask<JSONObject, Integer, JSONObject> {
 		protected JSONObject doInBackground(JSONObject... obj) {
 			try {
 				HttpClient httpclient = new DefaultHttpClient();
@@ -268,28 +262,30 @@ public class Remote extends Activity {
 				String temp = getSlideInfo + presID;
 				JSONObject result = new JSONObject(loadJsonFromNetwork(temp));
 				temp = result.getString("poll");
-				if(temp == "false") {
+				if (temp == "false") {
 					poll = false;
 				} else {
 					poll = true;
 				}
-				
+
 			} catch (Exception e) {
 				Log.d("InputStream", e.getLocalizedMessage());
 			}
-			
+
 			return null;
 		}
 
 		protected void onPostExecute(JSONObject result) {
-			if(poll) {
+			if (poll) {
 				resetPoll.setTextColor(Color.parseColor("#FFFF9F00"));
 			} else {
 				resetPoll.setTextColor(Color.parseColor("#BBEDEDED"));
 			}
 		}
 	}
-	private class EndPresentation extends AsyncTask<JSONObject, Integer, JSONObject> {
+
+	private class EndPresentation extends
+			AsyncTask<JSONObject, Integer, JSONObject> {
 		protected JSONObject doInBackground(JSONObject... obj) {
 			try {
 				HttpClient httpclient = new DefaultHttpClient();
@@ -307,6 +303,7 @@ public class Remote extends Activity {
 			return null;
 		}
 	}
+
 	private class ResetPoll extends AsyncTask<String, Integer, JSONObject> {
 		protected JSONObject doInBackground(String... json) {
 			try {
@@ -367,19 +364,4 @@ public class Remote extends Activity {
 		}
 		return img;
 	}
-
-	private static String convertInputStreamToString(InputStream inputStream)
-			throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(inputStream));
-		String line = "";
-		String result = "";
-		while ((line = bufferedReader.readLine()) != null)
-			result += line;
-
-		inputStream.close();
-		return result;
-
-	}
-
 }

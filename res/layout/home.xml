@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
-                android:contentDescription="TEMP"
+                android:contentDescription="@string/des"
                 android:src="@drawable/small_logo" />
 
             <TextView
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_below="@id/topBar"
-            android:background="@color/gray" />
+            android:background="@color/border" />
 
         <ListView
             android:id="@+id/list"
@@ -60,18 +60,19 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/border"
             android:focusable="false" />
-        <TextView 
+
+        <TextView
             android:id="@+id/empty"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_centerInParent="true"
             android:layout_below="@id/border"
-            android:textColor="@color/blue"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_marginTop="150dp"
-            android:visibility="gone"
-            android:text="@string/empty"/>
+            android:gravity="center"
+            android:text="@string/empty"
+            android:textColor="@color/blue"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/bottomBar"
@@ -97,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_above="@id/bottomBar"
-            android:background="@color/gray" />
+            android:background="@color/border" />
     </RelativeLayout>
 
     <ProgressBar
