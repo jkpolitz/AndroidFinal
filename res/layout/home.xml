@@ -57,9 +57,35 @@
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/border"
             android:focusable="false" />
+
+        <LinearLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/blue"
+            android:gravity="bottom"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/refresh"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/refresh"
+                android:textColor="@color/orange" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/bottomBorder"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_above="@id/bottomBar"
+            android:background="@color/gray" />
     </RelativeLayout>
 
     <ProgressBar

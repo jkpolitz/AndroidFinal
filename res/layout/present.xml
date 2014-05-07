@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/currSlideImg"
             android:gravity="center"
+            android:layout_marginTop="10dp"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -64,7 +65,7 @@
             android:layout_width="fill_parent"
             android:layout_height="100dp"
             android:layout_below="@id/slideNumInfo"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal" >
 
@@ -89,14 +90,14 @@
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_above="@id/options"
-            android:background="#FFC6CFD4" />
+            android:background="@color/gray" />
 
         <LinearLayout
             android:id="@+id/options"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:background="#103F7C"
+            android:background="@color/blue"
             android:gravity="bottom"
             android:orientation="horizontal" >
 
@@ -107,7 +108,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/reset_poll"
-                android:textColor="#ff9f00" />
+                android:textColor="@color/orange" />
 
             <TextView
                 android:id="@+id/endPres"
@@ -116,7 +117,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/end_pres"
-                android:textColor="#ff9f00" />
+                android:textColor="@color/orange" />
         </LinearLayout>
     </RelativeLayout>
 

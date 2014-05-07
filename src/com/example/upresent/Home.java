@@ -46,14 +46,16 @@ public class Home extends Activity {
 
 	String userName = "";
 	public static final String LOGIN_KEY = "Login";
+	Context context = this;
 
 	private static final int PRES_REQUEST = 6349;
 	ArrayList<Presentation> pres = new ArrayList<Presentation>();
 	Adapter adpt;
+	ListView list;
 
 	public String getPres = "http://upresent.org/api/index.php/getPresentations/";
 	public String deletePres = "http://upresent.org/api/index.php/deletePresentation";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,18 +70,27 @@ public class Home extends Activity {
 		Log.d("JKP", "content set" + getPres);
 		new GetPresentations().execute(getPres);
 
-		adpt = new Adapter(this, R.layout.list_row, pres);
-		ListView list = (ListView) findViewById(R.id.list);
-		list.setAdapter(adpt);
+		
 		Log.d("JKP", "pulled presentations");
 
 		TextView logout = (TextView) findViewById(R.id.logout);
+		TextView refresh = (TextView) findViewById(R.id.refresh);
 		logout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onBackPressed();
 			}
 		});
+		refresh.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pres.clear();
+				Toast.makeText(getApplicationContext(), "Refreshing UPresents",
+						Toast.LENGTH_SHORT).show();
+				new GetPresentations().execute(getPres);
+			}
+		});
+
 	}
 
 	void launchRemote(int presID, String name) {
@@ -89,7 +100,7 @@ public class Home extends Activity {
 		intent.putExtra(Remote.PRESN_KEY, name);
 		startActivityForResult(intent, PRES_REQUEST);
 	}
-	
+
 	void deletePresentation(String pName, int pos) {
 		Log.d("JKP", "Deleting Presentation");
 		// post slide change to server
@@ -100,12 +111,16 @@ public class Home extends Activity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		Toast.makeText(getApplicationContext(), "Deleting: " + pName,
+				Toast.LENGTH_SHORT).show();
 		postJSON(jsonObject, deletePres);
 		pres.remove(pos);
-        adpt.notifyDataSetChanged();
-		/*Intent intent = getIntent();
-		finish();
-		startActivity(intent);*/
+		adpt.notifyDataSetChanged();
+	}
+
+	void refresh() {
+		new GetPresentations().execute(getPres);
+		adpt.notifyDataSetChanged();
 	}
 
 	@Override
@@ -143,7 +158,7 @@ public class Home extends Activity {
 			JSONArray resultJSON = null;
 			JSONObject resultObj = null;
 
-			try {
+			/*try {
 				resultJSON = new JSONArray(result);
 				for (int i = 0; i < resultJSON.length(); i++) {
 					resultObj = resultJSON.getJSONObject(i);
@@ -152,13 +167,16 @@ public class Home extends Activity {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}
+			}*/
 			return resultJSON;
 		}
 
 		protected void onPostExecute(JSONArray result) {
 			findViewById(R.id.pBar).setVisibility(View.GONE);
 			findViewById(R.id.txtContainer).setVisibility(View.VISIBLE);
+			adpt = new Adapter(((Home)context), R.layout.list_row, pres);
+			ListView list = (ListView) findViewById(R.id.list);
+			list.setAdapter(adpt);
 		}
 
 		public String loadJsonFromNetwork(String jsonUrl) {
@@ -190,6 +208,7 @@ public class Home extends Activity {
 		}
 
 	}
+
 	private void postJSON(JSONObject json, String url) {
 		InputStream inputStream = null;
 		String result = "";
@@ -214,6 +233,7 @@ public class Home extends Activity {
 			Log.d("InputStream", e.getLocalizedMessage());
 		}
 	}
+
 	private static String convertInputStreamToString(InputStream inputStream)
 			throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(

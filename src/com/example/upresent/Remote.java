@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class Remote extends Activity {
 	private int currSlide = 1;
 	private String pName;
 	private Bitmap[] slideImgs;
+	private Boolean poll = false;
 
 	public static final String PRES_KEY = "PresKey";
 	public static final String PRESN_KEY = "PresNKey";
@@ -65,10 +67,11 @@ public class Remote extends Activity {
 	private String apiInfo;
 	private String rootURL = "http://upresent.org/";
 	private String getSlides = "http://upresent.org/api/index.php/getSlides/";
-	private String getPresInfo = "http://upresent.org/api/index.php/getPresInfo/";
+	private String reset = "http://upresent.org/api/index.php/resetPoll";
 	private String setSlide = "http://upresent.org/api/index.php/setCurrentSlide";
 	private String end = "http://upresent.org/api/index.php/finishPresentation";
-
+	private String getSlideInfo = "http://upresent.org/api/index.php/getCurrentSlide/";
+	
 	// private String slideURLs = 0;
 
 	@Override
@@ -79,7 +82,6 @@ public class Remote extends Activity {
 		Intent intent = getIntent();
 		presID = intent.getIntExtra(PRES_KEY, presID);
 		pName = intent.getStringExtra(PRESN_KEY);
-		String temp = "" + presID;
 		Log.d("JKP_75", pName);
 
 		setContentView(R.layout.present);
@@ -153,9 +155,9 @@ public class Remote extends Activity {
 		resetPoll.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "Resetting Poll",
-						Toast.LENGTH_SHORT).show();
-				// resetPoll();
+				if(poll){
+					resetPoll();
+				}
 			}
 		});
 
@@ -200,7 +202,29 @@ public class Remote extends Activity {
 			e.printStackTrace();
 		}
 		postJSON(jsonObject, setSlide);
-
+		String temp = getSlideInfo + presID;
+		try {
+			JSONObject result = new JSONObject(loadJsonFromNetwork(temp));
+			temp = result.getString("poll");
+			if(temp == "false") {
+				resetPoll.setTextColor(Color.parseColor("#BBEDEDED"));
+				poll = false;
+			} else {
+				resetPoll.setTextColor(Color.parseColor("#FFFF9F00"));
+				poll = true;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void resetPoll() {
+		Toast.makeText(getApplicationContext(), "Resetting Poll",
+				Toast.LENGTH_SHORT).show();
+		String json = "{\"presId\":\"" + presID + "\",\"slide\":" + currSlide + "}";
+		Log.d("JKP", json);
+		postJSONString(json, reset);
 	}
 
 	private void endPresentation() {
@@ -223,6 +247,28 @@ public class Remote extends Activity {
 			String jsonS = "";
 			jsonS = json.toString();
 			StringEntity se = new StringEntity(jsonS);
+			httpPost.setEntity(se);
+			httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("Content-type", "application/json");
+			HttpResponse httpResponse = httpclient.execute(httpPost);
+			inputStream = httpResponse.getEntity().getContent();
+			if (inputStream != null) {
+				result = convertInputStreamToString(inputStream);
+				Log.d("JKP_193", result);
+			} else
+				result = "Did not work!";
+
+		} catch (Exception e) {
+			Log.d("InputStream", e.getLocalizedMessage());
+		}
+	}
+	private void postJSONString(String json, String url) {
+		InputStream inputStream = null;
+		String result = "";
+		try {
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(url);
+			StringEntity se = new StringEntity(json);
 			httpPost.setEntity(se);
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
@@ -264,8 +310,7 @@ public class Remote extends Activity {
 		}
 
 		protected void onPostExecute(JSONObject result) {
-			slideImg.setImageBitmap(slideImgs[0]);
-			slideInfo.setText("Slide: " + currSlide + " of " + numS);
+			updateSlide();
 			RelativeLayout rL = (RelativeLayout) findViewById(R.id.onLoad);
 			rL.setVisibility(View.VISIBLE);
 			rL = (RelativeLayout) findViewById(R.id.onLoading);
