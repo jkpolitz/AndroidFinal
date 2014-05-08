@@ -43,8 +43,6 @@ public class MainActivity extends Activity {
 		login = (Button) findViewById(R.id.login);
 		userTV = (TextView) findViewById(R.id.userN);
 		passTV = (TextView) findViewById(R.id.pass);
-		userTV.setText("jack");
-		passTV.setText("kenneth'");
 
 		login.setOnClickListener(new Button.OnClickListener() {
 			@Override
